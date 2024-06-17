@@ -1,6 +1,6 @@
 USE AdventureWorks2022;
 
---1
+--z1
 CREATE PROCEDURE fibonacci (@n INT)
 AS
 BEGIN
@@ -25,7 +25,7 @@ END;
 
 EXEC fibonacci @n=8;
 
---2
+--z2
 CREATE TRIGGER drukowane
 ON Person.Person
 AFTER INSERT, UPDATE
@@ -36,7 +36,7 @@ BEGIN
 	FROM Person.Person
 END;
 
---3
+--z3
 CREATE TRIGGER TaxRateMonitor
 ON Sales.SalesTaxRate
 AFTER INSERT, UPDATE, DELETE
@@ -53,7 +53,6 @@ BEGIN
         END
 END;
 
---sprawdzenie
 UPDATE Sales.SalesTaxRate 
 SET TaxRate = 20000
 WHERE SalesTaxRateID = 1;
