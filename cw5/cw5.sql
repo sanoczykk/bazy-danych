@@ -24,12 +24,6 @@ data date,
 liczba_godzin int, 
 id_pracownika int);
 
-create table ksiegowosc.godziny2(
-id_godziny int primary key, 
-data date, 
-liczba_godzin int, 
-id_pracownika int);
-
 create table ksiegowosc.pensja(
 id_pensji int primary key not null, 
 stanowisko varchar(40) not null, 
@@ -49,25 +43,23 @@ id_pensji int,
 id_premii int);
 
 alter table ksiegowosc.godziny add foreign key (id_pracownika) references ksiegowosc.pracownicy(id_pracownika);
-alter table ksiegowosc.godziny2 add foreign key (id_pracownika) references ksiegowosc.pracownicy(id_pracownika);
 alter table ksiegowosc.wynagrodzenie add foreign key (id_pracownika) references ksiegowosc.pracownicy(id_pracownika);
-alter table ksiegowosc.wynagrodzenie add foreign key (id_godziny references ksiegowosc.godziny2(id_godziny);
 alter table ksiegowosc.wynagrodzenie add foreign key (id_pensji) references ksiegowosc.pensja(id_pensji);
 alter table ksiegowosc.wynagrodzenie add foreign key (id_premii) references ksiegowosc.premia(id_premii);
 
 -- z5.:
 
 insert into ksiegowosc.pracownicy(id_pracownika, imie, nazwisko, adres, telefon) values 
-(11, 'Jan', 'Kowalski', 'Polna 11a Gdynia', 673865345),
-(12, 'Waclaw', 'Dobrzanski', 'Słoneczna 77 Kraków', 567890123),
-(01, 'Anna', 'Kaczorek', 'Leśna 23c Lublin', 536718291), 
-(13, 'Bogdan', 'Ryman', 'Ogrodowa 3 Katowice', 832994167),
-(02, 'Alicja', 'Walaszek', 'Lipowa 87 Rzeszów', 647322653),
-(03, 'Patrycja', 'Gniazdo', 'Morska 5d Wrocław', 537289352),
-(14, 'Mikolaj', 'Drozd', 'Zielona 9 Białystok', 873928733), 
-(05, 'Dawid', 'Trzepak', 'Brzozowa 16 Olsztyn', 673829263),
-(04, 'Honorata', 'Kurtyna', 'Dębowa 243 Szczecin', 543526371), 
-(06, 'Nikodem', 'Strzała', 'Wiosenna 145 Poznań', 678901748);
+(11, 'Piotr', 'Nowak', 'Słoneczna 45 Gdańsk', 673865345),
+(12, 'Tomasz', 'Kamiński', 'Jesienna 23 Kraków', 567890123),
+(01, 'Elżbieta', 'Kowal', 'Leśna 5a Lublin', 536718291), 
+(13, 'Rafał', 'Kowalski', 'Ogrodowa 12 Katowice', 832994167),
+(02, 'Barbara', 'Wiśniewska', 'Lipowa 32 Rzeszów', 647322653),
+(03, 'Karolina', 'Zielińska', 'Morska 8 Wrocław', 537289352),
+(14, 'Marek', 'Wójcik', 'Zielona 45 Białystok', 873928733), 
+(05, 'Anna', 'Kowalczyk', 'Brzozowa 18 Olsztyn', 673829263),
+(04, 'Paweł', 'Kaczmarek', 'Dębowa 56 Szczecin', 543526371), 
+(06, 'Natalia', 'Mazur', 'Wiosenna 89 Poznań', 678901748);
 
 
 insert into ksiegowosc.godziny(id_godziny, data, liczba_godzin, id_pracownika) values 
@@ -76,13 +68,6 @@ insert into ksiegowosc.godziny(id_godziny, data, liczba_godzin, id_pracownika) v
 (546,'2024-01-13',10,01),(873,'2024-02-03',8,05),
 (023,'2024-01-18',8,02),(568,'2024-01-23',10,01),
 (987, '2024-01-27',4,04),(453,'2024-01-15',12,01);
-
-insert into ksiegowosc.godziny2(id_godziny, data, liczba_godzin, id_pracownika) values 
-(460,'2024-01-23',142,02),(067,'2024-01-22',159,03),
-(765,'2024-01-21',184,04),(072,'2024-03-31',163,05),
-(546,'2024-01-13',103,01),(873,'2024-02-03',172,11),
-(023,'2024-01-18',162,12),(568,'2024-01-23',160,13),
-(987, '2024-01-27',43,14),(453,'2024-01-15',156,06);
 
 insert into ksiegowosc.pensja(id_pensji, stanowisko, kwota) values 
 (04, 'Operator pow. płaskich', 2137.00),
@@ -158,7 +143,7 @@ WHERE nazwisko LIKE '%n%' AND imie LIKE '%a';
 SELECT p.imie, p.nazwisko, 
        SUM(gp.liczba_godzin - 160) AS nadgodziny
 FROM ksiegowosc.pracownicy p
-JOIN ksiegowosc.godziny2 gp ON p.id_pracownika = gp.id_pracownika
+JOIN ksiegowosc.godziny gp ON p.id_pracownika = gp.id_pracownika
 GROUP BY p.imie, p.nazwisko
 HAVING SUM(gp.liczba_godzin) > 160;
 
@@ -173,7 +158,7 @@ WHERE s.kwota BETWEEN 1500 AND 3000;
 
 SELECT p.imie, p.nazwisko
 FROM ksiegowosc.pracownicy p
-JOIN ksiegowosc.godziny2 gp ON p.id_pracownika = gp.id_pracownika
+JOIN ksiegowosc.godziny gp ON p.id_pracownika = gp.id_pracownika
 LEFT JOIN ksiegowosc.wynagrodzenie pr ON p.id_pracownika = pr.id_pracownika
 WHERE pr.id_premii IS NULL
 GROUP BY p.imie, p.nazwisko
