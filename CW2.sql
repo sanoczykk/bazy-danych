@@ -32,3 +32,57 @@ INSERT INTO poi (name, geom) VALUES
 SELECT SUM(ST_Length(geom)) AS total_road_len
 FROM roads;
 
+--B
+SELECT 
+    ST_AsText(geom) AS wkt,
+    ST_Area(geom) AS pole,
+    ST_Perimeter(geom) AS perimeter
+FROM buildings 
+WHERE name = 'BuildingA';
+
+--C
+SELECT 
+    name,
+    ST_Area(geom) AS pole
+FROM buildings 
+ORDER BY name;
+
+--D
+SELECT 
+    name,
+    ST_Perimeter(geom) AS perimeter
+FROM buildings 
+ORDER BY ST_Area(geom) DESC 
+LIMIT 2;
+
+--E
+SELECT 
+    ST_Distance(b.geom, p.geom) AS krotki
+FROM buildings b, poi p
+WHERE b.name = 'BuildingC' AND p.name = 'K';
+
+--F
+SELECT 
+    ST_Area(ST_Difference(
+        b1.geom, 
+        ST_Buffer(b2.geom, 0.5)
+    )) AS pole
+FROM buildings b1, buildings b2
+WHERE b1.name = 'BuildingC' AND b2.name = 'BuildingB';
+
+--G
+SELECT b.name
+FROM buildings b, roads r
+WHERE r.name = 'RoadX'
+AND ST_Y(ST_Centroid(b.geom)) > ST_Y(ST_LineInterpolatePoint(r.geom, 0.5));
+
+--H
+WITH poly AS (
+    SELECT ST_GeomFromText('POLYGON((4 7, 6 7, 6 8, 4 8, 4 7))') AS geom
+)
+SELECT 
+    ST_Area(ST_SymDifference(b.geom, p.geom)) AS pole
+FROM buildings b, poly p
+WHERE b.name = 'BuildingC';
+
+
